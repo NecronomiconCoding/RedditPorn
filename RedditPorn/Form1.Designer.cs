@@ -40,22 +40,24 @@
             this.button1 = new System.Windows.Forms.Button();
             this.statusLabel = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.label1.Font = new System.Drawing.Font("Franklin Gothic Medium", 13.875F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(721, 51);
+            this.label1.Size = new System.Drawing.Size(670, 43);
             this.label1.TabIndex = 0;
             this.label1.Text = "RedditPorn - A Reddit Background Picker";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 163);
+            this.label2.Location = new System.Drawing.Point(63, 163);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(135, 25);
             this.label2.TabIndex = 1;
@@ -63,15 +65,15 @@
             // 
             // subredditTextBox
             // 
-            this.subredditTextBox.Location = new System.Drawing.Point(307, 157);
+            this.subredditTextBox.Location = new System.Drawing.Point(357, 157);
             this.subredditTextBox.Name = "subredditTextBox";
-            this.subredditTextBox.Size = new System.Drawing.Size(100, 31);
+            this.subredditTextBox.Size = new System.Drawing.Size(120, 31);
             this.subredditTextBox.TabIndex = 2;
             this.subredditTextBox.Text = "earthporn";
             // 
             // startButton
             // 
-            this.startButton.Location = new System.Drawing.Point(181, 296);
+            this.startButton.Location = new System.Drawing.Point(279, 291);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(129, 48);
             this.startButton.TabIndex = 3;
@@ -81,7 +83,7 @@
             // 
             // subRedditUpdateButton
             // 
-            this.subRedditUpdateButton.Location = new System.Drawing.Point(453, 155);
+            this.subRedditUpdateButton.Location = new System.Drawing.Point(503, 155);
             this.subRedditUpdateButton.Name = "subRedditUpdateButton";
             this.subRedditUpdateButton.Size = new System.Drawing.Size(109, 41);
             this.subRedditUpdateButton.TabIndex = 4;
@@ -92,7 +94,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 205);
+            this.label3.Location = new System.Drawing.Point(62, 205);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(253, 25);
             this.label3.TabIndex = 5;
@@ -100,15 +102,15 @@
             // 
             // updateTimeinSecTextBox
             // 
-            this.updateTimeinSecTextBox.Location = new System.Drawing.Point(307, 205);
+            this.updateTimeinSecTextBox.Location = new System.Drawing.Point(357, 205);
             this.updateTimeinSecTextBox.Name = "updateTimeinSecTextBox";
-            this.updateTimeinSecTextBox.Size = new System.Drawing.Size(100, 31);
+            this.updateTimeinSecTextBox.Size = new System.Drawing.Size(120, 31);
             this.updateTimeinSecTextBox.TabIndex = 6;
             this.updateTimeinSecTextBox.Text = "60";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(453, 205);
+            this.button1.Location = new System.Drawing.Point(503, 205);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(108, 33);
             this.button1.TabIndex = 7;
@@ -119,7 +121,7 @@
             // statusLabel
             // 
             this.statusLabel.AutoSize = true;
-            this.statusLabel.Location = new System.Drawing.Point(148, 258);
+            this.statusLabel.Location = new System.Drawing.Point(246, 258);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(204, 25);
             this.statusLabel.TabIndex = 8;
@@ -135,12 +137,37 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Sort by Top (All Time)",
+            "Sort by Hot"});
+            this.comboBox1.Location = new System.Drawing.Point(67, 118);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(544, 33);
+            this.comboBox1.TabIndex = 9;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(264, 342);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(156, 25);
+            this.linkLabel1.TabIndex = 10;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Current Picture";
+            this.linkLabel1.Visible = false;
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(757, 372);
+            this.ClientSize = new System.Drawing.Size(698, 378);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.updateTimeinSecTextBox);
@@ -171,6 +198,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label statusLabel;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
 

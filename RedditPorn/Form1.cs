@@ -16,7 +16,7 @@ namespace RedditPorn
 {
     public partial class Form1 : Form
     {
-        private static string _subreddit = "earthporn";
+        private static string _subreddit;
         private static Reddit _reddit;
         private static Subreddit _curSubreddit;
         private static readonly Timer NextUodate = new Timer();
@@ -33,14 +33,15 @@ namespace RedditPorn
         public Form1()
         {
             InitializeComponent();
+            comboBox1.SelectedIndex = 0;
             notifyIcon1.Visible = true;
-            this.Resize += delegate(object sender, EventArgs args)
+            Resize += delegate
             {
-                if (FormWindowState.Minimized == this.WindowState)
+                if (FormWindowState.Minimized == WindowState)
                 {
                     _hidden = true;
                     notifyIcon1.ShowBalloonTip(60);
-                    this.Hide();
+                    Hide();
                 }
             };
         }
@@ -59,6 +60,8 @@ namespace RedditPorn
                 ImageList.Clear();
                 startButton.Text = "Start";
                 statusLabel.Text = "Not Running";
+                linkLabel1.Visible = false;
+                linkLabel1.Links.Clear();
                 _running = false;
                 return;
             }
@@ -66,16 +69,15 @@ namespace RedditPorn
             _running = true;
             statusLabel.Text = "Running...";
             startButton.Text = "Stop";
-            this.Hide();
+            Hide();
             _hidden = true;
             notifyIcon1.ShowBalloonTip(60);
             if (File.Exists(Directory.GetCurrentDirectory() + "\\" + "imglist.txt"))
-            {
                 foreach (var line in File.ReadAllLines(Directory.GetCurrentDirectory() + "\\" + "imglist.txt"))
                     ImageList.Add(line.Split('§')[0], line.Split('§')[1]);
-            }
 
             _reddit = new Reddit();
+            _subreddit = subredditTextBox.Text;
             _curSubreddit = _reddit.GetSubreddit($"/r/{_subreddit}");
             NextUodate.Interval = 1000*60*int.Parse(updateTimeinSecTextBox.Text);
             NextUodate.Tick += CycleImage;
@@ -83,7 +85,7 @@ namespace RedditPorn
             NextUodate.Start();
         }
 
-        private static void CycleImage(object sender, EventArgs e)
+        private void CycleImage(object sender, EventArgs e)
         {
             if (!CheckOnImages())
             {
@@ -97,7 +99,11 @@ namespace RedditPorn
             }
             SystemParametersInfo(SpiSetdeskwallpaper, 0, Directory.GetCurrentDirectory() + "\\" + ImageList.Keys.First(),
                 SpifUpdateinifile);
-            Task.Factory.StartNew(new Action(delegate
+            statusLabel.Text = @"Running...";
+            linkLabel1.Visible = true;
+            linkLabel1.Text = "Current Picture";
+            linkLabel1.Links.Add(0, linkLabel1.Text.Length, ImageList.Values.First());
+            Task.Factory.StartNew(delegate
             {
                 Thread.Sleep(3000);
                 Debug.Write(Directory.GetCurrentDirectory() + "\\" + ImageList.Keys.First());
@@ -105,21 +111,37 @@ namespace RedditPorn
                 File.Delete(Directory.GetCurrentDirectory() + "\\" + ImageList.Keys.First());
 
                 ImageList.Remove(ImageList.Keys.First());
-            }));
+            });
         }
 
-        private static bool CheckOnImages()
+        private bool CheckOnImages()
         {
+            var selectedSortMethod = comboBox1.SelectedIndex;
             if (ImageList.Keys.Any()) return ImageList.Keys.Any();
-            foreach (var post in _curSubreddit.New.Take(60))
+            if (selectedSortMethod == 0)
             {
-                var url = post.Url.AbsoluteUri;
-                if ((!url.Contains(".jpg") && !url.Contains(".png"))) continue;
-                ImageList.Add(Path.GetFileName(post.Url.AbsolutePath), url);
-                    
+                foreach (var post in _curSubreddit.GetTop(FromTime.All).Take(60))
+                {
+                    if (ImageList.ContainsValue(post.Url.AbsolutePath) || ImageList.Count >= 10) continue;
+                    var url = post.Url.AbsoluteUri;
+                    if (!url.Contains(".jpg") && !url.Contains(".png")) continue;
+                    ImageList.Add(Path.GetFileName(post.Url.AbsolutePath), url);
+                }
             }
+            else
+            {
+                foreach (var post in _curSubreddit.Hot.Take(60))
+                {
+                    if (!ImageList.ContainsValue(post.Url.AbsolutePath) || ImageList.Count <= 10) continue;
+                    var url = post.Url.AbsoluteUri;
+                    if (!url.Contains(".jpg") && !url.Contains(".png")) continue;
+                    ImageList.Add(Path.GetFileName(post.Url.AbsolutePath), url);
+                }
+            }
+
             return ImageList.Keys.Any();
         }
+
         private void subRedditUpdateButton_Click(object sender, EventArgs e)
         {
             _subreddit = subredditTextBox.Text;
@@ -140,16 +162,20 @@ namespace RedditPorn
         {
             if (_hidden)
             {
-                this.Show();
+                Show();
                 _hidden = false;
             }
-                
+
             else
             {
-              this.Hide();
-              _hidden = true;  
+                Hide();
+                _hidden = true;
             }
-                
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(e.Link.LinkData.ToString());
         }
     }
 }
